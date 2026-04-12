@@ -7,13 +7,21 @@ import java.sql.Statement;
 
 public class IniciarBaseDatos {
 
-    // Nota: La URL NO incluye el nombre de la base de datos al final para permitir su creación
     private static final String URL_BASE = "jdbc:mysql://localhost:3306/?serverTimezone=UTC";
     private static final String USER = "root";
-    private static final String PASSWORD = "";
+    private static final String PASSWORD = ""; // Asegúrate de que esta sea tu clave real
 
     public static void inicializarBaseDeDatos() {
         String dbName = "grieta";
+
+        // --- SOLUCIÓN AL ERROR DEL DRIVER ---
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+        } catch (ClassNotFoundException e) {
+            System.err.println("CRÍTICO: Driver MySQL no encontrado. Revisa tu pom.xml y recarga Maven.");
+            return; // Detenemos la ejecución si no hay driver
+        }
+        // ------------------------------------
 
         try (Connection con = DriverManager.getConnection(URL_BASE, USER, PASSWORD);
              Statement st = con.createStatement()) {
