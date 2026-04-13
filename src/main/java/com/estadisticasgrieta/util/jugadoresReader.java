@@ -7,9 +7,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class AgentesLibresReader {
+public class jugadoresReader {
 
-    public static List<Jugador> leerAgentesLibres(String rutaArchivo) {
+    public static List<Jugador> leerJugadoresTXT(String rutaArchivo) {
         List<Jugador> agentesLibres = new ArrayList<>();
 
         try (BufferedReader br = new BufferedReader(new FileReader(rutaArchivo))) {
@@ -18,8 +18,7 @@ public class AgentesLibresReader {
                 if (linea.trim().isEmpty()) continue;
 
                 // Separar datos del txt
-                String lineaLimpia = linea.replace(";", "").trim();
-                String[] datos = lineaLimpia.split(",");
+                String[] datos = linea.split(",");
 
                 if (datos.length == 4) {
                     try {
@@ -29,8 +28,8 @@ public class AgentesLibresReader {
                         String region = datos[3].trim();
 
                         agentesLibres.add(new Jugador(nombre, rol, nivel, region));
-                    } catch (NumberFormatException e) {
-                        System.err.println("Error de formato en nivel numérico en la línea: " + linea);
+                    } catch (Exception e) {
+                        System.err.println("Error en linea " + linea + e);
                     }
                 } else {
                     System.err.println("Formato incorrecto (faltan o sobran datos) en la línea: " + linea);

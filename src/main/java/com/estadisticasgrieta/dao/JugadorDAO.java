@@ -10,13 +10,13 @@ public class JugadorDAO {
     public void importarAgentesLibres(List<Jugador> jugadores) {
         String sql = "INSERT INTO Jugadores (nickname, rol_principal, id_equipo) VALUES (?, ?, ?)";
 
-        try (Connection conn = DButil.getInstance();
+        try (Connection conn = DButil.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
             for (Jugador jugador : jugadores) {
                 pstmt.setString(1, jugador.getNickname());
                 pstmt.setString(2, jugador.getRolPrincipal());
-                pstmt.setNull(3, java.sql.Types.INTEGER);
+                pstmt.setNull(3, Types.INTEGER);
 
                 pstmt.executeUpdate();
             }
@@ -32,7 +32,7 @@ public class JugadorDAO {
     public void crear(Jugador jugador) {
         String sql = "INSERT INTO Jugadores (nickname, rol_principal, id_equipo) VALUES (?, ?, ?)";
 
-        try (Connection conn = DButil.getInstance();
+        try (Connection conn = DButil.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
             pstmt.setString(1, jugador.getNickname());
@@ -52,7 +52,7 @@ public class JugadorDAO {
 
     public Jugador obtenerPorId(Long id) {
         String sql = "SELECT * FROM Jugadores WHERE id_jugador = ?";
-        try (Connection conn = DButil.getInstance();
+        try (Connection conn = DButil.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
             pstmt.setLong(1, id);
@@ -80,7 +80,7 @@ public class JugadorDAO {
         List<Jugador> jugadores = new ArrayList<>();
         String sql = "SELECT * FROM Jugadores";
 
-        try (Connection conn = DButil.getInstance();
+        try (Connection conn = DButil.getConnection();
              Statement stmt = conn.createStatement();
              ResultSet rs = stmt.executeQuery(sql)) {
 
@@ -104,7 +104,7 @@ public class JugadorDAO {
 
     public void actualizar(Jugador jugador) {
         String sql = "UPDATE Jugadores SET nickname = ?, rol_principal = ?, id_equipo = ? WHERE id_jugador = ?";
-        try (Connection conn = DButil.getInstance();
+        try (Connection conn = DButil.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
             pstmt.setString(1, jugador.getNickname());
@@ -126,7 +126,7 @@ public class JugadorDAO {
 
     public void eliminar(Long id) {
         String sql = "DELETE FROM Jugadores WHERE id_jugador = ?";
-        try (Connection conn = DButil.getInstance();
+        try (Connection conn = DButil.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
             pstmt.setLong(1, id);

@@ -36,4 +36,17 @@ public class Jugador {
 
     public String getRegionOrigen() { return regionOrigen; }
     public void setRegionOrigen(String regionOrigen) { this.regionOrigen = regionOrigen; }
+
+    @Override
+    public String toString() {
+        return "Jugador{" +
+                "idJugador=" + idJugador +
+                ", nickname='" + nickname + '\'' +
+                ", rolPrincipal='" + rolPrincipal + '\'' +
+                ", idEquipo=" + idEquipo +
+                ", nivel=" + nivel +
+                ", regionOrigen='" + regionOrigen + '\'' +
+                '}';
+    }
 }
+
