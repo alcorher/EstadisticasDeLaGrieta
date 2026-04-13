@@ -9,19 +9,10 @@ public class IniciarBaseDatos {
 
     private static final String URL_BASE = "jdbc:mysql://localhost:3306/?serverTimezone=UTC";
     private static final String USER = "root";
-    private static final String PASSWORD = ""; // Asegúrate de que esta sea tu clave real
+    private static final String PASSWORD = "";
 
     public static void inicializarBaseDeDatos() {
         String dbName = "grieta";
-
-        // --- SOLUCIÓN AL ERROR DEL DRIVER ---
-        try {
-            Class.forName("com.mysql.cj.jdbc.Driver");
-        } catch (ClassNotFoundException e) {
-            System.err.println("CRÍTICO: Driver MySQL no encontrado. Revisa tu pom.xml y recarga Maven.");
-            return; // Detenemos la ejecución si no hay driver
-        }
-        // ------------------------------------
 
         try (Connection con = DriverManager.getConnection(URL_BASE, USER, PASSWORD);
              Statement st = con.createStatement()) {
@@ -38,7 +29,7 @@ public class IniciarBaseDatos {
                     "ubicacion VARCHAR(100) NOT NULL" +
                     ")";
             st.executeUpdate(createRegiones);
-            System.out.println("Tabla 'Regiones' lista.");
+            System.out.println("Tabla 'Regiones' Creada.");
 
             String createEquipos = "CREATE TABLE IF NOT EXISTS Equipos (" +
                     "id_equipo INT AUTO_INCREMENT PRIMARY KEY, " +

@@ -15,7 +15,7 @@ public class Jugador {
         this.rolPrincipal = rolPrincipal;
         this.nivel = nivel;
         this.regionOrigen = regionOrigen;
-        this.idEquipo = null; // Los jugadores cargados incialmente no tienen equipo asignado
+        this.idEquipo = null; // Los jugadores cargados incialmente no tienen equipo
     }
 
     // Getters y Setters

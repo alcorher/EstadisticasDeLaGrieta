@@ -17,7 +17,7 @@ public class AgentesLibresReader {
             while ((linea = br.readLine()) != null) {
                 if (linea.trim().isEmpty()) continue;
 
-                // Eliminar el punto y coma final y separar por comas
+                // Separar datos del txt
                 String lineaLimpia = linea.replace(";", "").trim();
                 String[] datos = lineaLimpia.split(",");
 
@@ -37,7 +37,7 @@ public class AgentesLibresReader {
                 }
             }
         } catch (IOException e) {
-            System.err.println("Error al leer el archivo de agentes libres: " + e.getMessage());
+            System.err.println("Error al leer el archivo: " + e.getMessage());
         }
 
         return agentesLibres;
