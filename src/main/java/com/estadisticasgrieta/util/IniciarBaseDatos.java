@@ -38,7 +38,7 @@ public class IniciarBaseDatos {
                     "ubicacion VARCHAR(100) NOT NULL" +
                     ")";
             st.executeUpdate(createRegiones);
-            System.out.println("Tabla 'Regiones' lista.");
+            System.out.println("Tabla 'Regiones' Creada.");
 
             String createEquipos = "CREATE TABLE IF NOT EXISTS Equipos (" +
                     "id_equipo INT AUTO_INCREMENT PRIMARY KEY, " +

@@ -15,7 +15,7 @@ public class Jugador {
         this.rolPrincipal = rolPrincipal;
         this.nivel = nivel;
         this.regionOrigen = regionOrigen;
-        this.idEquipo = null; // Los jugadores cargados incialmente no tienen equipo asignado
+        this.idEquipo = null; // Los jugadores cargados incialmente no tienen equipo
     }
 
     // Getters y Setters
@@ -36,4 +36,17 @@ public class Jugador {
 
     public String getRegionOrigen() { return regionOrigen; }
     public void setRegionOrigen(String regionOrigen) { this.regionOrigen = regionOrigen; }
+
+    @Override
+    public String toString() {
+        return "Jugador{" +
+                "idJugador=" + idJugador +
+                ", nickname='" + nickname + '\'' +
+                ", rolPrincipal='" + rolPrincipal + '\'' +
+                ", idEquipo=" + idEquipo +
+                ", nivel=" + nivel +
+                ", regionOrigen='" + regionOrigen + '\'' +
+                '}';
+    }
 }
+

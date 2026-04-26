@@ -7,24 +7,20 @@ import java.util.List;
 
 public class JugadorDAO {
 
-    //Importar desde el txt
     public void importarAgentesLibres(List<Jugador> jugadores) {
         String sql = "INSERT INTO Jugadores (nickname, rol_principal, id_equipo) VALUES (?, ?, ?)";
 
-        try (Connection conn = DButil.getInstance();
+        try (Connection conn = DButil.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
-
-            conn.setAutoCommit(false);
 
             for (Jugador jugador : jugadores) {
                 pstmt.setString(1, jugador.getNickname());
                 pstmt.setString(2, jugador.getRolPrincipal());
-                pstmt.setNull(3, java.sql.Types.INTEGER); // Agente libre = NULL
-                pstmt.addBatch();
+                pstmt.setNull(3, Types.INTEGER);
+
+                pstmt.executeUpdate();
             }
 
-            pstmt.executeBatch();
-            conn.commit();
             System.out.println("Importación de " + jugadores.size() + " agentes libres completada con éxito.");
 
         } catch (SQLException e) {
@@ -35,8 +31,9 @@ public class JugadorDAO {
 
     public void crear(Jugador jugador) {
         String sql = "INSERT INTO Jugadores (nickname, rol_principal, id_equipo) VALUES (?, ?, ?)";
-        try (Connection conn = DButil.getInstance();
-             PreparedStatement pstmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+
+        try (Connection conn = DButil.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
             pstmt.setString(1, jugador.getNickname());
             pstmt.setString(2, jugador.getRolPrincipal());
@@ -46,14 +43,8 @@ public class JugadorDAO {
             } else {
                 pstmt.setNull(3, java.sql.Types.INTEGER);
             }
-
             pstmt.executeUpdate();
 
-            try (ResultSet generatedKeys = pstmt.getGeneratedKeys()) {
-                if (generatedKeys.next()) {
-                    jugador.setIdJugador(generatedKeys.getLong(1));
-                }
-            }
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -61,7 +52,7 @@ public class JugadorDAO {
 
     public Jugador obtenerPorId(Long id) {
         String sql = "SELECT * FROM Jugadores WHERE id_jugador = ?";
-        try (Connection conn = DButil.getInstance();
+        try (Connection conn = DButil.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
             pstmt.setLong(1, id);
@@ -89,7 +80,7 @@ public class JugadorDAO {
         List<Jugador> jugadores = new ArrayList<>();
         String sql = "SELECT * FROM Jugadores";
 
-        try (Connection conn = DButil.getInstance();
+        try (Connection conn = DButil.getConnection();
              Statement stmt = conn.createStatement();
              ResultSet rs = stmt.executeQuery(sql)) {
 
@@ -113,7 +104,7 @@ public class JugadorDAO {
 
     public void actualizar(Jugador jugador) {
         String sql = "UPDATE Jugadores SET nickname = ?, rol_principal = ?, id_equipo = ? WHERE id_jugador = ?";
-        try (Connection conn = DButil.getInstance();
+        try (Connection conn = DButil.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
             pstmt.setString(1, jugador.getNickname());
@@ -135,7 +126,7 @@ public class JugadorDAO {
 
     public void eliminar(Long id) {
         String sql = "DELETE FROM Jugadores WHERE id_jugador = ?";
-        try (Connection conn = DButil.getInstance();
+        try (Connection conn = DButil.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
             pstmt.setLong(1, id);

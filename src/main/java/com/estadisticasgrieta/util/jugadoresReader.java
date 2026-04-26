@@ -7,9 +7,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class AgentesLibresReader {
+public class jugadoresReader {
 
-    public static List<Jugador> leerAgentesLibres(String rutaArchivo) {
+    public static List<Jugador> leerJugadoresTXT(String rutaArchivo) {
         List<Jugador> agentesLibres = new ArrayList<>();
 
         try (BufferedReader br = new BufferedReader(new FileReader(rutaArchivo))) {
@@ -17,9 +17,8 @@ public class AgentesLibresReader {
             while ((linea = br.readLine()) != null) {
                 if (linea.trim().isEmpty()) continue;
 
-                // Eliminar el punto y coma final y separar por comas
-                String lineaLimpia = linea.replace(";", "").trim();
-                String[] datos = lineaLimpia.split(",");
+                // Separar datos del txt
+                String[] datos = linea.split(",");
 
                 if (datos.length == 4) {
                     try {
@@ -29,15 +28,15 @@ public class AgentesLibresReader {
                         String region = datos[3].trim();
 
                         agentesLibres.add(new Jugador(nombre, rol, nivel, region));
-                    } catch (NumberFormatException e) {
-                        System.err.println("Error de formato en nivel numérico en la línea: " + linea);
+                    } catch (Exception e) {
+                        System.err.println("Error en linea " + linea + e);
                     }
                 } else {
                     System.err.println("Formato incorrecto (faltan o sobran datos) en la línea: " + linea);
                 }
             }
         } catch (IOException e) {
-            System.err.println("Error al leer el archivo de agentes libres: " + e.getMessage());
+            System.err.println("Error al leer el archivo: " + e.getMessage());
         }
 
         return agentesLibres;
