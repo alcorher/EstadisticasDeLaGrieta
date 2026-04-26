@@ -9,7 +9,7 @@ public class RegionDAO {
 
     public void crear(Region region) {
         String sql = "INSERT INTO Regiones (nombre_servidor, ubicacion) VALUES (?, ?)";
-        try (Connection conn = DButil.getInstance();
+        try (Connection conn = DButil.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
             pstmt.setString(1, region.getNombreServidor());
             pstmt.setString(2, region.getUbicacion());
@@ -22,7 +22,7 @@ public class RegionDAO {
     public List<Region> obtenerTodas() {
         List<Region> regiones = new ArrayList<>();
         String sql = "SELECT * FROM Regiones";
-        try (Connection conn = DButil.getInstance();
+        try (Connection conn = DButil.getConnection();
              Statement stmt = conn.createStatement();
              ResultSet rs = stmt.executeQuery(sql)) {
             while (rs.next()) {
@@ -38,5 +38,5 @@ public class RegionDAO {
         return regiones;
     }
 
-    // Aquí puedes añadir Update y Delete siguiendo el mismo patrón si lo necesitas
+
 }

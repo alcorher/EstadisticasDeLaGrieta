@@ -9,7 +9,7 @@ public class EquipoDAO {
 
     public void crear(Equipo equipo) {
         String sql = "INSERT INTO Equipos (nombre_equipo, id_region) VALUES (?, ?)";
-        try (Connection conn = DButil.getInstance();
+        try (Connection conn = DButil.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
             pstmt.setString(1, equipo.getNombreEquipo());
             pstmt.setInt(2, equipo.getIdRegion());
@@ -22,7 +22,7 @@ public class EquipoDAO {
     public List<Equipo> obtenerTodos() {
         List<Equipo> equipos = new ArrayList<>();
         String sql = "SELECT * FROM Equipos";
-        try (Connection conn = DButil.getInstance();
+        try (Connection conn = DButil.getConnection();
              Statement stmt = conn.createStatement();
              ResultSet rs = stmt.executeQuery(sql)) {
             while (rs.next()) {

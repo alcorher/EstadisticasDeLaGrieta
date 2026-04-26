@@ -32,6 +32,6 @@ public class Main {
         equipoDAO.crear(new Equipo("T1", 1)); // Asumiendo que KR es ID 1
         equipoDAO.crear(new Equipo("G2 Esports", 2));
 
-        System.out.println("Demo: Regiones y Equipos creados para la entrega.");
+        System.out.println("Demo: Regiones y Equipos creados.");
     }
 }
