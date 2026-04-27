@@ -32,11 +32,11 @@ public class jugadoresReader {
                         System.err.println("Error en linea " + linea + e);
                     }
                 } else {
-                    System.err.println("Formato incorrecto (faltan o sobran datos) en la línea: " + linea);
+                    throw new IOException("Formato incorrecto en linea: " + linea);
                 }
             }
         } catch (IOException e) {
-            System.err.println("Error al leer el archivo: " + e.getMessage());
+            System.err.println("Error: " + e.getMessage());
         }
 
         return agentesLibres;
