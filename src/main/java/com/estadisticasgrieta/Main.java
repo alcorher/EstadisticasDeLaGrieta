@@ -1,12 +1,12 @@
 package com.estadisticasgrieta;
 
 import com.estadisticasgrieta.dao.EquipoDAO;
+import com.estadisticasgrieta.dao.JugadorDAO;
 import com.estadisticasgrieta.dao.RegionDAO;
 import com.estadisticasgrieta.model.Equipo;
+import com.estadisticasgrieta.model.Jugador;
 import com.estadisticasgrieta.model.Region;
 import com.estadisticasgrieta.util.IniciarBaseDatos;
-import com.estadisticasgrieta.dao.JugadorDAO;
-import com.estadisticasgrieta.model.Jugador;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -18,15 +18,6 @@ public class Main {
         RegionDAO regionDAO = new RegionDAO();
         EquipoDAO equipoDAO = new EquipoDAO();
         JugadorDAO jugadorDAO = new JugadorDAO();
-
-        // Si ejecutamos el main varias veces acabaremos con estos jugadores importados muchas veces
-        
-    /*    List<Jugador> agentesLibres = jugadoresReader.leerJugadoresTXT("jugadores.txt");
-        System.out.println("Datos leidos del archivo:");
-        for (Jugador jugador : agentesLibres) {
-            System.out.println(jugador);
-        }
-        jugadorDAO.importarAgentesLibres(agentesLibres);*/
 
         Map<String, String> regionesBase = new LinkedHashMap<>();
         regionesBase.put("KR", "Corea del Sur");
@@ -105,41 +96,9 @@ public class Main {
         System.out.println("Equipos registrados: " + equipoDAO.obtenerTodos().size());
         System.out.println("Jugadores asignados a equipos en esta ejecucion: " + jugadoresAsignados);
 
-        imprimirJugadoresConEquipoYRegion(jugadorDAO, equipoDAO, regionDAO);
-    }
-
-    private static void imprimirJugadoresConEquipoYRegion(JugadorDAO jugadorDAO, EquipoDAO equipoDAO, RegionDAO regionDAO) {
-        Map<Integer, Equipo> equiposPorId = new LinkedHashMap<>();
-        for (Equipo equipo : equipoDAO.obtenerTodos()) {
-            equiposPorId.put(equipo.getIdEquipo(), equipo);
-        }
-
-        Map<Integer, String> regionPorId = new LinkedHashMap<>();
-        for (Region region : regionDAO.obtenerTodas()) {
-            regionPorId.put(region.getIdRegion(), region.getNombreServidor());
-        }
-
-        System.out.println("\nListado de jugadores con equipo y region:");
-        for (Jugador jugador : jugadorDAO.obtenerTodos()) {
-            String nombreEquipo = "Sin equipo";
-            String nombreRegion = "Sin region";
-
-            if (jugador.getIdEquipo() != null) {
-                Equipo equipo = equiposPorId.get(jugador.getIdEquipo().intValue());
-                if (equipo != null) {
-                    nombreEquipo = equipo.getNombreEquipo();
-                    nombreRegion = regionPorId.getOrDefault(equipo.getIdRegion(), "Region desconocida");
-                } else {
-                    nombreEquipo = "Equipo desconocido";
-                    nombreRegion = "Region desconocida";
-                }
-            }
-
-            System.out.println("- " + jugador.getNickname()
-                    + " (" + jugador.getRolPrincipal() + ")"
-                    + " | Equipo: " + nombreEquipo
-                    + " | Region del equipo: " + nombreRegion);
-        }
+        Menu menu = new Menu(regionDAO, equipoDAO, jugadorDAO);
+        menu.imprimirJugadoresConEquipoYRegion();
+        menu.iniciar();
     }
 
 }

@@ -7,7 +7,7 @@ import java.util.List;
 
 public class JugadorDAO {
 
-    public void importarAgentesLibres(List<Jugador> jugadores) {
+    public void importarJugadores(List<Jugador> jugadores) {
         String sql = "INSERT INTO Jugadores (nickname, rol_principal, id_equipo) VALUES (?, ?, ?)";
 
         try (Connection conn = DButil.getConnection();
