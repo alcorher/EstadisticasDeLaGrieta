@@ -15,16 +15,19 @@
     </properties>
 
     <dependencies>
-        <dependency>
-            <groupId>com.mysql</groupId>
-            <artifactId>mysql-connector-j</artifactId>
-            <version>9.3.0</version>
-        </dependency>
+        <!-- MySQL Connector (single dependency, 8.x compatible) -->
 
 
         <dependency>
             <groupId>org.hibernate.orm</groupId>
             <artifactId>hibernate-core</artifactId>
+            <version>6.4.4.Final</version>
+        </dependency>
+
+        <!-- Hibernate HikariCP integration (resuelve provider class) -->
+        <dependency>
+            <groupId>org.hibernate.orm</groupId>
+            <artifactId>hibernate-hikaricp</artifactId>
             <version>6.4.4.Final</version>
         </dependency>
 
@@ -37,11 +40,24 @@
         </dependency>
 
 
-        <!-- MySQL Driver -->
         <dependency>
             <groupId>com.mysql</groupId>
             <artifactId>mysql-connector-j</artifactId>
-            <version>8.4.0</version>
+            <version>9.3.0</version>
+        </dependency>
+
+        <!-- HikariCP connection pool to avoid built-in pool warnings -->
+        <dependency>
+            <groupId>com.zaxxer</groupId>
+            <artifactId>HikariCP</artifactId>
+            <version>5.0.1</version>
+        </dependency>
+
+        <!-- Solución al conflicto de logs de SLF4J -->
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-simple</artifactId>
+            <version>2.0.13</version>
         </dependency>
 
 

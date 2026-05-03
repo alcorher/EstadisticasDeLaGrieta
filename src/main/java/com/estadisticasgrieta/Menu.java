@@ -161,7 +161,8 @@ public class Menu {
             String nombreRegion = "Sin region";
 
             if (jugador.getIdEquipo() != null) {
-                Equipo equipo = equiposPorId.get(jugador.getIdEquipo().intValue());
+
+                Equipo equipo = equiposPorId.get(jugador.getIdEquipo());
                 if (equipo != null) {
                     nombreEquipo = equipo.getNombreEquipo();
                     nombreRegion = regionPorId.getOrDefault(equipo.getIdRegion(), "Region desconocida");
@@ -286,7 +287,8 @@ public class Menu {
             if (equipo == null) {
                 System.out.println("No existe ese equipo. Se creara como agente libre.");
             } else {
-                jugador.setIdEquipo(equipo.getIdEquipo().longValue());
+
+                jugador.setIdEquipo(equipo.getIdEquipo()); // CAMBIO
             }
         }
 
@@ -312,7 +314,8 @@ public class Menu {
             return;
         }
 
-        jugador.setIdEquipo(equipo.getIdEquipo().longValue());
+
+        jugador.setIdEquipo(equipo.getIdEquipo()); // CAMBIO
         jugadorDAO.actualizar(jugador);
         System.out.println("Jugador asignado correctamente.");
     }

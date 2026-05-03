@@ -24,10 +24,12 @@
     <property name="hibernate.connection.password">
     </property>
 
-    <!-- Dialecto -->
-    <property name="hibernate.dialect">
-      org.hibernate.dialect.MySQLDialect
-    </property>
+    <!-- Dialecto: usar MySQL8 para evitar warnings sobre versiones antiguas -->
+    <property name="hibernate.dialect">org.hibernate.dialect.MySQL8Dialect</property>
+
+    <!-- Usar HikariCP como proveedor de conexiones para evitar el pool incorporado -->
+    <property name="hibernate.connection.provider_class">org.hibernate.hikaricp.internal.HikariCPConnectionProvider</property>
+    <property name="hibernate.hikari.maximumPoolSize">10</property>
 
     <!-- Configuración didáctica -->
     <property name="hibernate.show_sql">true</property>
@@ -41,9 +43,5 @@
     <mapping class="com.estadisticasgrieta.model.Jugador"/>
     <mapping class="com.estadisticasgrieta.model.MaestriaCampeon"/>
 
-  </session-factory>
-</hibernate-configuration>
-    <!-- DB schema will be updated if needed -->
-    <!-- <property name="hibernate.hbm2ddl.auto">update</property> -->
   </session-factory>
 </hibernate-configuration>

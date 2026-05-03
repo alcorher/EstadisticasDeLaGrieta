@@ -49,8 +49,9 @@ public class IniciarBaseDatos {
             st.executeUpdate(createEquipos);
             System.out.println("Tabla 'Equipos' Creada.");
 
+            // CAMBIO: id_jugador ahora es BIGINT para que Hibernate lo valide con la clase Jugador (Long)
             String createJugadores = "CREATE TABLE IF NOT EXISTS Jugadores (" +
-                    "id_jugador INT AUTO_INCREMENT PRIMARY KEY, " +
+                    "id_jugador BIGINT AUTO_INCREMENT PRIMARY KEY, " +
                     "nickname VARCHAR(50) NOT NULL, " +
                     "rol_principal VARCHAR(50) NOT NULL, " +
                     "id_equipo INT NULL, " +
@@ -59,12 +60,12 @@ public class IniciarBaseDatos {
             st.executeUpdate(createJugadores);
             System.out.println("Tabla 'Jugadores' Creada.");
 
-            // 6. Crear tabla 'Maestrias_Campeon' (Para Hibernate)
+            // CAMBIO: id_jugador (FK) ahora es BIGINT para mantener la integridad referencial
             String createMaestrias = "CREATE TABLE IF NOT EXISTS Maestrias_Campeon (" +
                     "id_maestria BIGINT AUTO_INCREMENT PRIMARY KEY, " +
                     "nombre_campeon VARCHAR(100) NOT NULL, " +
                     "puntos_totales INT NOT NULL, " +
-                    "id_jugador INT NOT NULL, " +
+                    "id_jugador BIGINT NOT NULL, " +
                     "FOREIGN KEY (id_jugador) REFERENCES Jugadores(id_jugador) ON DELETE CASCADE" +
                     ")";
             st.executeUpdate(createMaestrias);

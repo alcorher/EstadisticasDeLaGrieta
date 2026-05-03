@@ -9,6 +9,7 @@ import com.estadisticasgrieta.model.Jugador;
 import com.estadisticasgrieta.model.MaestriaCampeon; // NUEVO
 import com.estadisticasgrieta.model.Region;
 import com.estadisticasgrieta.util.IniciarBaseDatos;
+import com.estadisticasgrieta.util.jugadoresReader; // NUEVO: lector de txt
 
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -18,11 +19,19 @@ public class Main {
     public static void main(String[] args) {
         System.out.println("--- Iniciando Inicialización de Base de Datos ---");
         IniciarBaseDatos.inicializarBaseDeDatos();
-
+        
         RegionDAO regionDAO = new RegionDAO();
         EquipoDAO equipoDAO = new EquipoDAO();
         JugadorDAO jugadorDAO = new JugadorDAO();
         MaestriaDAO maestriaDAO = new MaestriaDAO(); // NUEVO: Instanciamos el DAO de Hibernate
+
+        // Importar jugadores desde el archivo jugadores.txt (si hay datos)
+        String rutaJugadores = "jugadores.txt";
+        List<Jugador> jugadoresDesdeTxt = jugadoresReader.leerJugadoresTXT(rutaJugadores);
+        if (!jugadoresDesdeTxt.isEmpty()) {
+            jugadorDAO.importarJugadores(jugadoresDesdeTxt);
+            System.out.println("Jugadores importados desde " + rutaJugadores + ": " + jugadoresDesdeTxt.size());
+        }
 
         Map<String, String> regionesBase = new LinkedHashMap<>();
         regionesBase.put("KR", "Corea del Sur");
@@ -92,8 +101,8 @@ public class Main {
         for (Jugador jugador : todosLosJugadores) {
             String equipoObjetivo = asignacionesJugadorEquipo.get(jugador.getNickname());
             Integer idEquipo = idEquipoPorNombre.get(equipoObjetivo);
-            if (idEquipo != null && jugador.getIdEquipo() == null) { // Solo actualiza si no tiene equipo
-                jugador.setIdEquipo(idEquipo.longValue());
+            if (idEquipo != null && jugador.getIdEquipo() == null) {
+                jugador.setIdEquipo(idEquipo); // CAMBIO: Ya no usamos .longValue()
                 jugadorDAO.actualizar(jugador);
                 jugadoresAsignados++;
             }

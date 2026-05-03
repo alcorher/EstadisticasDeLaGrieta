@@ -18,12 +18,12 @@ public class Jugador {
     private String rolPrincipal;
 
     @Column(name = "id_equipo")
-    private Long idEquipo; // Puede ser null
+    private Integer idEquipo; // CAMBIO: De Long a Integer para coincidir con el INT de MySQL
 
-    @Transient // Hibernate ignorará este campo al conectarse a la BD
+    @Transient
     private Integer nivel;
 
-    @Transient // Hibernate ignorará este campo al conectarse a la BD
+    @Transient
     private String regionOrigen;
 
     public Jugador() {}
@@ -33,7 +33,7 @@ public class Jugador {
         this.rolPrincipal = rolPrincipal;
         this.nivel = nivel;
         this.regionOrigen = regionOrigen;
-        this.idEquipo = null; // Los jugadores cargados inicialmente no tienen equipo
+        this.idEquipo = null;
     }
 
     // Getters y Setters
@@ -46,8 +46,8 @@ public class Jugador {
     public String getRolPrincipal() { return rolPrincipal; }
     public void setRolPrincipal(String rolPrincipal) { this.rolPrincipal = rolPrincipal; }
 
-    public Long getIdEquipo() { return idEquipo; }
-    public void setIdEquipo(Long idEquipo) { this.idEquipo = idEquipo; }
+    public Integer getIdEquipo() { return idEquipo; } // CAMBIO
+    public void setIdEquipo(Integer idEquipo) { this.idEquipo = idEquipo; } // CAMBIO
 
     public Integer getNivel() { return nivel; }
     public void setNivel(Integer nivel) { this.nivel = nivel; }
