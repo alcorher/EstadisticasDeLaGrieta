@@ -2,12 +2,15 @@ package com.estadisticasgrieta;
 
 import com.estadisticasgrieta.dao.EquipoDAO;
 import com.estadisticasgrieta.dao.JugadorDAO;
+import com.estadisticasgrieta.dao.MaestriaDAO;
 import com.estadisticasgrieta.dao.RegionDAO;
 import com.estadisticasgrieta.model.Equipo;
 import com.estadisticasgrieta.model.Jugador;
+import com.estadisticasgrieta.model.MaestriaCampeon; // NUEVO
 import com.estadisticasgrieta.model.Region;
 
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
 
@@ -15,11 +18,14 @@ public class Menu {
     private final RegionDAO regionDAO;
     private final EquipoDAO equipoDAO;
     private final JugadorDAO jugadorDAO;
+    private final MaestriaDAO maestriaDAO; // NUEVO
 
-    public Menu(RegionDAO regionDAO, EquipoDAO equipoDAO, JugadorDAO jugadorDAO) {
+    // CONSTRUCTOR ACTUALIZADO
+    public Menu(RegionDAO regionDAO, EquipoDAO equipoDAO, JugadorDAO jugadorDAO, MaestriaDAO maestriaDAO) {
         this.regionDAO = regionDAO;
         this.equipoDAO = equipoDAO;
         this.jugadorDAO = jugadorDAO;
+        this.maestriaDAO = maestriaDAO;
     }
 
     public void iniciar() {
@@ -27,7 +33,7 @@ public class Menu {
         boolean salir = false;
 
         while (!salir) {
-            System.out.println("\n====== MENU DE PRUEBAS ======");
+            System.out.println("\n====== MENU DE ESTADÍSTICAS DE LA GRIETA ======");
             System.out.println("1. Ver jugadores con equipo y region");
             System.out.println("2. Ver regiones");
             System.out.println("3. Ver equipos");
@@ -35,6 +41,10 @@ public class Menu {
             System.out.println("5. Crear equipo");
             System.out.println("6. Crear jugador");
             System.out.println("7. Asignar jugador a equipo");
+            System.out.println("----------------------------------------------");
+            System.out.println("8. Ver maestrías de un jugador (Hibernate)"); // NUEVO
+            System.out.println("9. Añadir maestría a un jugador (Hibernate)"); // NUEVO
+            System.out.println("----------------------------------------------");
             System.out.println("0. Salir");
 
             int opcion = leerEntero(scanner, "Elige una opcion: ");
@@ -61,9 +71,17 @@ public class Menu {
                 case 7:
                     asignarJugadorAEquipoDesdeMenu(scanner);
                     break;
+                case 8: // NUEVO
+                    verMaestriasDeJugador(scanner);
+                    break;
+                case 9: // NUEVO
+                    anadirMaestriaAJugador(scanner);
+                    break;
                 case 0:
                     salir = true;
                     System.out.println("Saliendo del menu...");
+                    // Cerramos la factoría de Hibernate al salir
+                    com.estadisticasgrieta.util.HibernateUtil.shutdown();
                     break;
                 default:
                     System.out.println("Opcion no valida.");
@@ -71,6 +89,60 @@ public class Menu {
             }
         }
     }
+
+    // --- NUEVOS MÉTODOS PARA HIBERNATE ---
+
+    private void verMaestriasDeJugador(Scanner scanner) {
+        System.out.print("Introduce el Nickname del jugador para ver sus maestrías: ");
+        String nickname = scanner.nextLine().trim();
+
+        Jugador jugador = buscarJugadorPorNickname(nickname);
+        if (jugador == null) {
+            System.out.println("No existe un jugador con ese nickname.");
+            return;
+        }
+
+        // Usamos Hibernate para obtener las maestrías
+        List<MaestriaCampeon> maestrias = maestriaDAO.obtenerPorJugador(jugador.getIdJugador());
+
+        if (maestrias.isEmpty()) {
+            System.out.println("El jugador " + jugador.getNickname() + " no tiene maestrías registradas.");
+        } else {
+            System.out.println("\n--- Maestrías de " + jugador.getNickname() + " ---");
+            for (MaestriaCampeon maestria : maestrias) {
+                System.out.println("- Campeón: " + maestria.getNombreCampeon() + " | Puntos: " + maestria.getPuntosTotales());
+            }
+        }
+    }
+
+    private void anadirMaestriaAJugador(Scanner scanner) {
+        System.out.print("Introduce el Nickname del jugador: ");
+        String nickname = scanner.nextLine().trim();
+
+        Jugador jugador = buscarJugadorPorNickname(nickname);
+        if (jugador == null) {
+            System.out.println("No existe un jugador con ese nickname.");
+            return;
+        }
+
+        System.out.print("Nombre del Campeón: ");
+        String nombreCampeon = scanner.nextLine().trim();
+
+        System.out.print("Puntos totales de maestría: ");
+        int puntosTotales = leerEntero(scanner, "");
+
+        if (nombreCampeon.isEmpty() || puntosTotales < 0) {
+            System.out.println("Datos inválidos. El campeón no puede estar vacío y los puntos no pueden ser negativos.");
+            return;
+        }
+
+        // Creamos y guardamos la maestría usando Hibernate
+        MaestriaCampeon nuevaMaestria = new MaestriaCampeon(nombreCampeon, puntosTotales, jugador);
+        maestriaDAO.crear(nuevaMaestria);
+        System.out.println("¡Maestría añadida correctamente a " + jugador.getNickname() + " mediante Hibernate!");
+    }
+
+    // --- FIN NUEVOS MÉTODOS ---
 
     public void imprimirJugadoresConEquipoYRegion() {
         Map<Integer, Equipo> equiposPorId = new LinkedHashMap<>();
@@ -110,6 +182,9 @@ public class Menu {
         while (true) {
             System.out.print(mensaje);
             String input = scanner.nextLine().trim();
+            if (input.isEmpty()) { // Si el usuario solo da Enter, no hacemos nada y el scanner pide otra vez
+                continue;
+            }
             try {
                 return Integer.parseInt(input);
             } catch (NumberFormatException e) {
@@ -251,4 +326,3 @@ public class Menu {
         return null;
     }
 }
-

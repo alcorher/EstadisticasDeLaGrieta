@@ -59,6 +59,17 @@ public class IniciarBaseDatos {
             st.executeUpdate(createJugadores);
             System.out.println("Tabla 'Jugadores' Creada.");
 
+            // 6. Crear tabla 'Maestrias_Campeon' (Para Hibernate)
+            String createMaestrias = "CREATE TABLE IF NOT EXISTS Maestrias_Campeon (" +
+                    "id_maestria BIGINT AUTO_INCREMENT PRIMARY KEY, " +
+                    "nombre_campeon VARCHAR(100) NOT NULL, " +
+                    "puntos_totales INT NOT NULL, " +
+                    "id_jugador INT NOT NULL, " +
+                    "FOREIGN KEY (id_jugador) REFERENCES Jugadores(id_jugador) ON DELETE CASCADE" +
+                    ")";
+            st.executeUpdate(createMaestrias);
+            System.out.println("Tabla 'Maestrias_Campeon' Creada.");
+
             System.out.println("BBDD Creada");
 
         } catch (SQLException e) {

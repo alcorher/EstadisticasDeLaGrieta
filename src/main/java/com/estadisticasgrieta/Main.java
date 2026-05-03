@@ -2,22 +2,27 @@ package com.estadisticasgrieta;
 
 import com.estadisticasgrieta.dao.EquipoDAO;
 import com.estadisticasgrieta.dao.JugadorDAO;
+import com.estadisticasgrieta.dao.MaestriaDAO; // NUEVO
 import com.estadisticasgrieta.dao.RegionDAO;
 import com.estadisticasgrieta.model.Equipo;
 import com.estadisticasgrieta.model.Jugador;
+import com.estadisticasgrieta.model.MaestriaCampeon; // NUEVO
 import com.estadisticasgrieta.model.Region;
 import com.estadisticasgrieta.util.IniciarBaseDatos;
 
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 public class Main {
     public static void main(String[] args) {
+        System.out.println("--- Iniciando Inicialización de Base de Datos ---");
         IniciarBaseDatos.inicializarBaseDeDatos();
 
         RegionDAO regionDAO = new RegionDAO();
         EquipoDAO equipoDAO = new EquipoDAO();
         JugadorDAO jugadorDAO = new JugadorDAO();
+        MaestriaDAO maestriaDAO = new MaestriaDAO(); // NUEVO: Instanciamos el DAO de Hibernate
 
         Map<String, String> regionesBase = new LinkedHashMap<>();
         regionesBase.put("KR", "Corea del Sur");
@@ -82,10 +87,12 @@ public class Main {
         asignacionesJugadorEquipo.put("Josedeodo", "Rainbow7");
 
         int jugadoresAsignados = 0;
-        for (Jugador jugador : jugadorDAO.obtenerTodos()) {
+        List<Jugador> todosLosJugadores = jugadorDAO.obtenerTodos(); // Guardamos la lista para usarla luego
+
+        for (Jugador jugador : todosLosJugadores) {
             String equipoObjetivo = asignacionesJugadorEquipo.get(jugador.getNickname());
             Integer idEquipo = idEquipoPorNombre.get(equipoObjetivo);
-            if (idEquipo != null) {
+            if (idEquipo != null && jugador.getIdEquipo() == null) { // Solo actualiza si no tiene equipo
                 jugador.setIdEquipo(idEquipo.longValue());
                 jugadorDAO.actualizar(jugador);
                 jugadoresAsignados++;
@@ -96,9 +103,36 @@ public class Main {
         System.out.println("Equipos registrados: " + equipoDAO.obtenerTodos().size());
         System.out.println("Jugadores asignados a equipos en esta ejecucion: " + jugadoresAsignados);
 
-        Menu menu = new Menu(regionDAO, equipoDAO, jugadorDAO);
-        menu.imprimirJugadoresConEquipoYRegion();
+        // --- NUEVO: Creación de Maestrías con Hibernate ---
+        System.out.println("\n--- Creando Maestrías de Prueba (Hibernate) ---");
+        int maestriasCreadas = 0;
+        for (Jugador j : todosLosJugadores) {
+            // Buscamos a Faker y le asignamos un par de maestrías
+            if (j.getNickname().equalsIgnoreCase("Faker")) {
+                List<MaestriaCampeon> maestriasFaker = maestriaDAO.obtenerPorJugador(j.getIdJugador());
+                // Solo creamos si no tiene maestrías aún para evitar duplicados en ejecuciones repetidas
+                if (maestriasFaker.isEmpty()) {
+                    maestriaDAO.crear(new MaestriaCampeon("Azir", 1500000, j));
+                    maestriaDAO.crear(new MaestriaCampeon("Ryze", 2000000, j));
+                    maestriasCreadas += 2;
+                }
+            }
+            // Buscamos a Caps
+            if (j.getNickname().equalsIgnoreCase("Caps")) {
+                List<MaestriaCampeon> maestriasCaps = maestriaDAO.obtenerPorJugador(j.getIdJugador());
+                if (maestriasCaps.isEmpty()) {
+                    maestriaDAO.crear(new MaestriaCampeon("Sylas", 850000, j));
+                    maestriasCreadas++;
+                }
+            }
+        }
+        System.out.println("Maestrías creadas en esta ejecución: " + maestriasCreadas);
+        System.out.println("------------------------------------------------\n");
+
+
+        // ACTUALIZACIÓN: Pasamos también el DAO de maestrías al Menú
+        Menu menu = new Menu(regionDAO, equipoDAO, jugadorDAO, maestriaDAO);
+        // menu.imprimirJugadoresConEquipoYRegion(); // Lo comento por si prefieres que el menú arranque limpio
         menu.iniciar();
     }
-
 }

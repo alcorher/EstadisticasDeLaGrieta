@@ -1,11 +1,29 @@
 package com.estadisticasgrieta.model;
 
+import jakarta.persistence.*;
+
+@Entity
+@Table(name = "Jugadores")
 public class Jugador {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id_jugador")
     private Long idJugador;
+
+    @Column(name = "nickname")
     private String nickname;
+
+    @Column(name = "rol_principal")
     private String rolPrincipal;
+
+    @Column(name = "id_equipo")
     private Long idEquipo; // Puede ser null
+
+    @Transient // Hibernate ignorará este campo al conectarse a la BD
     private Integer nivel;
+
+    @Transient // Hibernate ignorará este campo al conectarse a la BD
     private String regionOrigen;
 
     public Jugador() {}
@@ -15,7 +33,7 @@ public class Jugador {
         this.rolPrincipal = rolPrincipal;
         this.nivel = nivel;
         this.regionOrigen = regionOrigen;
-        this.idEquipo = null; // Los jugadores cargados incialmente no tienen equipo
+        this.idEquipo = null; // Los jugadores cargados inicialmente no tienen equipo
     }
 
     // Getters y Setters
@@ -49,4 +67,3 @@ public class Jugador {
                 '}';
     }
 }
-

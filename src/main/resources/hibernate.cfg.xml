@@ -1,0 +1,49 @@
+<?xml version='1.0' encoding='utf-8'?>
+<!DOCTYPE hibernate-configuration PUBLIC
+    "-//Hibernate/Hibernate Configuration DTD//EN"
+    "http://www.hibernate.org/dtd/hibernate-configuration-3.0.dtd">
+<hibernate-configuration>
+  <session-factory>
+    <property name="connection.url"/>
+    <property name="connection.driver_class"/>
+    <!-- <property name="connection.username"/> -->
+    <!-- <property name="connection.password"/> -->
+    <!-- Conexión a MySQL -->
+    <property name="hibernate.connection.driver_class">
+      com.mysql.cj.jdbc.Driver
+    </property>
+
+    <property name="hibernate.connection.url">
+      jdbc:mysql://localhost:3306/grieta?serverTimezone=UTC
+    </property>
+
+    <property name="hibernate.connection.username">
+      root
+    </property>
+
+    <property name="hibernate.connection.password">
+    </property>
+
+    <!-- Dialecto -->
+    <property name="hibernate.dialect">
+      org.hibernate.dialect.MySQLDialect
+    </property>
+
+    <!-- Configuración didáctica -->
+    <property name="hibernate.show_sql">true</property>
+    <property name="hibernate.format_sql">true</property>
+
+    <!-- IMPORTANTE -->
+    <!-- Como las tablas ya existen, usamos validate -->
+    <property name="hibernate.hbm2ddl.auto">validate</property>
+
+    <!-- Entidades -->
+    <mapping class="com.estadisticasgrieta.model.Jugador"/>
+    <mapping class="com.estadisticasgrieta.model.MaestriaCampeon"/>
+
+  </session-factory>
+</hibernate-configuration>
+    <!-- DB schema will be updated if needed -->
+    <!-- <property name="hibernate.hbm2ddl.auto">update</property> -->
+  </session-factory>
+</hibernate-configuration>
